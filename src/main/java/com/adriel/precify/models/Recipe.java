@@ -1,44 +1,36 @@
 package com.adriel.precify.models;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity @Table(name = "product")
-public class Product {
+@Entity @Table(name = "product_ingredient")
+public class Recipe {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-    private String description;
-    private Double costPrice;
-    private Double salePrice;
+    @ManyToOne @JoinColumn(name = "product_id", nullable = false)
+    private Product product_id;
+
+    @ManyToOne @JoinColumn(name = "ingredient_id", nullable = false)
+    private Ingredient ingredient_id;
 
     @Column(nullable = false)
-    private Double profitMargin;
-    
+    private Double amount;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT")
     @Column(nullable = false)
     private ZonedDateTime registerDateTime;
-    
-    @OneToMany(mappedBy = "product_id")
-    private List<Recipe> products;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductPacking> productsPacking;
-
-    public Product(){}
 
     public Long getId() {
         return id;
@@ -48,44 +40,28 @@ public class Product {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Product getProduct_id() {
+        return product_id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProduct_id(Product product_id) {
+        this.product_id = product_id;
     }
 
-    public String getDescription() {
-        return description;
+    public Ingredient getIngredient_id() {
+        return ingredient_id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setIngredient_id(Ingredient ingredient_id) {
+        this.ingredient_id = ingredient_id;
     }
 
-    public Double getCostPrice() {
-        return costPrice;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setCostPrice(Double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public Double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(Double salePrice) {
-        this.salePrice = salePrice;
-    }
-
-    public Double getProfitMargin() {
-        return profitMargin;
-    }
-
-    public void setProfitMargin(Double profitMargin) {
-        this.profitMargin = profitMargin;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public ZonedDateTime getRegisterDateTime() {
@@ -112,7 +88,7 @@ public class Product {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Product other = (Product) obj;
+        Recipe other = (Recipe) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

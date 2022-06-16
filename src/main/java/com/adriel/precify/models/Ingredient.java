@@ -1,26 +1,38 @@
 package com.adriel.precify.models;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity
+@Entity @Table(name = "ingredient")
 public class Ingredient {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
     private String description;
+
+    @Column(nullable = false)
     private Double price;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT")
+    @Column(nullable = false)
     private ZonedDateTime registerDateTime;
+
+    @OneToMany(mappedBy = "ingredient_id")
+    private List<Recipe> ingredients;
 
     public Ingredient(){}
 

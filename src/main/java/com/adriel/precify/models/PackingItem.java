@@ -9,36 +9,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity @Table(name = "product")
-public class Product {
-    
+@Entity @Table(name = "packing_item")
+public class PackingItem {
+ 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-    private String description;
-    private Double costPrice;
-    private Double salePrice;
+    @OneToOne
+    private Store store;
 
     @Column(nullable = false)
-    private Double profitMargin;
-    
+    private String name;
+
+    private String description;
+
+    @Column(nullable = false)
+    private Double price;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT")
     @Column(nullable = false)
     private ZonedDateTime registerDateTime;
-    
-    @OneToMany(mappedBy = "product_id")
-    private List<Recipe> products;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductPacking> productsPacking;
-
-    public Product(){}
+    @OneToMany(mappedBy = "packingItem")
+    private List<ProductPacking> items;
 
     public Long getId() {
         return id;
@@ -46,6 +44,14 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public String getName() {
@@ -64,28 +70,12 @@ public class Product {
         this.description = description;
     }
 
-    public Double getCostPrice() {
-        return costPrice;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setCostPrice(Double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public Double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(Double salePrice) {
-        this.salePrice = salePrice;
-    }
-
-    public Double getProfitMargin() {
-        return profitMargin;
-    }
-
-    public void setProfitMargin(Double profitMargin) {
-        this.profitMargin = profitMargin;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public ZonedDateTime getRegisterDateTime() {
@@ -94,6 +84,14 @@ public class Product {
 
     public void setRegisterDateTime(ZonedDateTime registerDateTime) {
         this.registerDateTime = registerDateTime;
+    }
+
+    public List<ProductPacking> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ProductPacking> items) {
+        this.items = items;
     }
 
     @Override
@@ -112,7 +110,7 @@ public class Product {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Product other = (Product) obj;
+        PackingItem other = (PackingItem) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
